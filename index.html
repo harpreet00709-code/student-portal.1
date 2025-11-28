@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student ERP Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-soft: #111827;
+      --card: #1f2937;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59,130,246,0.15);
+      --accent-strong: #2563eb;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --danger: #f97373;
+      --success: #4ade80;
+      --border: #1f2937;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 18px 45px rgba(15,23,42,0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* Layout */
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+    }
+
+    /* Sidebar */
+
+    .sidebar {
+      background: rgba(15,23,42,0.98);
+      border-right: 1px solid rgba(148,163,184,0.25);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .logo-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 16px;
+      background: radial-gradient(circle at 0 0, #60a5fa, #1d4ed8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      box-shadow: 0 12px 30px rgba(37,99,235,0.8);
+    }
+
+    .logo-text-main {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .logo-text-sub {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .nav-section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 10px 4px 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 11px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      color: var(--muted);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: 0.16s ease;
+    }
+
+    .nav-link span.icon {
+      width: 22px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, rgba(37,99,235,0.35), rgba(79,70,229,0.35));
+      color: var(--text);
+      border-color: rgba(129,140,248,0.6);
+      box-shadow: 0 12px 25px rgba(37,99,235,0.55);
+    }
+
+    .nav-link:hover:not(.active) {
+      background: rgba(15,23,42,0.9);
+      color: #e5e7eb;
+      border-color: rgba(148,163,184,0.35);
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.9;
+      border-top: 1px dashed rgba(148,163,184,0.4);
+      padding-top: 10px;
+    }
+
+    /* Main */
+
+    .main {
+      padding: 18px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .top-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pill-badge {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 11px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--muted);
+    }
+
+    .user-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(15,23,42,0.8);
+      border: 1px solid rgba(148,163,184,0.55);
+    }
+
+    .user-mini-avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4f46e5, #22c55e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .user-mini-name {
+      font-size: 12px;
+    }
+
+    .content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(260px, 0.95fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1000px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .panel.active {
+      display: flex;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), #020617);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.3);
+      padding: 14px 14px 16px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.45);
+      color: var(--muted);
+    }
+
+    /* Dashboard quick cards */
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 800px) {
+      .grid-3 {
+        grid-template-columns: repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 580px) {
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, rgba(15,23,42,0.96), #020617);
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(148,163,184,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .stat-extra {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .chip {
+      position: absolute;
+      top: 7px;
+      right: 8px;
+      font-size: 10px;
+      padding: 3px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(34,197,94,0.12);
+      color: #bbf7d0;
+      border: 1px solid rgba(34,197,94,0.5);
+    }
+
+    .chip.bad {
+      background: rgba(248,113,113,0.12);
+      color: #fecaca;
+      border-color: rgba(248,113,113,0.5);
+    }
+
+    /* Tables */
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 6px 8px;
+      text-align: left;
+      border-bottom: 1px solid rgba(31,41,55,0.85);
+    }
+
+    th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgba(15,23,42,0.85);
+    }
+
+    .status-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .status-pass {
+      background: rgba(34,197,94,0.14);
+      color: #bbf7d0;
+    }
+
+    .status-fail {
+      background: rgba(248,113,113,0.16);
+      color: #fecaca;
+    }
+
+    .status-pending {
+      background: rgba(250,204,21,0.14);
+      color: #facc15;
+    }
+
+    /* Progress / attendance */
+
+    .progress-wrap {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(30,64,175,0.35);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      width: 0%;
+      transition: width 0.35s ease;
+    }
+
+    .progress-bar.low {
+      background: linear-gradient(90deg, #f97316, #f97373);
+    }
+
+    /* Forms */
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 650px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      padding: 7px 9px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      transition: 0.16s ease;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.6);
+    }
+
+    .muted-help {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      font-size: 13px;
+      cursor: pointer;
+      background: rgba(15,23,42,0.9);
+      color: var(--text);
+      transition: 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      border-color: rgba(59,130,246,0.9);
+      box-shadow: 0 12px 25px rgba(37,99,235,0.7);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.06);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-ghost {
+      border-color: rgba(148,163,184,0.6);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.96);
+      color: #e5e7eb;
+    }
+
+    /* Profile */
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 230px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 780px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .avatar-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .avatar-big {
+      width: 110px;
+      height: 110px;
+      border-radius: 40%;
+      overflow: hidden;
+      border: 2px solid rgba(129,140,248,0.9);
+      box-shadow: 0 15px 35px rgba(37,99,235,0.8);
+      background: radial-gradient(circle at top, #4f46e5, #0f172a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      font-weight: 700;
+    }
+
+    .avatar-big img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar-name {
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .avatar-meta {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .link-btn {
+      font-size: 12px;
+      text-decoration: underline;
+      cursor: pointer;
+      color: #93c5fd;
+    }
+
+    /* Right column cards */
+
+    .side-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notice-item {
+      font-size: 12px;
+      padding: 5px 7px;
+      border-radius: 8px;
+      border: 1px dashed rgba(148,163,184,0.6);
+      margin-bottom: 6px;
+    }
+
+    .notice-title {
+      font-weight: 500;
+    }
+
+    .notice-meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .badge-soft {
+      font-size: 11px;
+      padding: 3px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(37,99,235,0.18);
+      border: 1px solid rgba(37,99,235,0.7);
+      color: #bfdbfe;
+    }
+
+    .pill-small {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: rgba(15,23,42,0.95);
+      border: 1px solid rgba(148,163,184,0.6);
+      color: var(--muted);
+    }
+
+    .downloads-list a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 6px 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(30,64,175,0.8);
+      margin-bottom: 6px;
+      text-decoration: none;
+      color: var(--text);
+      background: rgba(15,23,42,0.95);
+    }
+
+    .downloads-list a span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .support-text {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo-block">
+      <div class="logo-icon">S</div>
+      <div>
+        <div class="logo-text-main">Student ERP</div>
+        <div class="logo-text-sub">Smart campus portal</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-link active" data-target="dashboard">
+        <span class="icon">🏠</span>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-link" data-target="fees">
+        <span class="icon">💳</span>
+        <span>Fees & Payments</span>
+      </div>
+      <div class="nav-link" data-target="attendance">
+        <span class="icon">📊</span>
+        <span>Attendance</span>
+      </div>
+      <div class="nav-link" data-target="results">
+        <span class="icon">📑</span>
+        <span>Exam Results</span>
+      </div>
+
+      <div class="nav-section-label">Account</div>
+      <div class="nav-link" data-target="profile">
+        <span class="icon">👤</span>
+        <span>Profile / ERP</span>
+      </div>
+      <div class="nav-link" data-target="support">
+        <span class="icon">🛟</span>
+        <span>Support</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      ERP v1.0 • Demo UI  
+      <br>Connect this with backend / database for real data.
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <header class="top-bar">
+      <div class="top-left">
+        <div class="page-title" id="pageTitle">Dashboard</div>
+        <div class="page-subtitle" id="pageSubtitle">
+          Overview of your fees, attendance, results and profile.
+        </div>
+      </div>
+      <div class="top-right">
+        <div class="pill-badge">2025 • Semester III</div>
+        <div class="user-mini">
+          <div class="user-mini-avatar" id="miniAvatar">H</div>
+          <div class="user-mini-name" id="miniName">Harpreet Singh</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="content">
+      <!-- LEFT: main panels -->
+      <div>
+        <!-- DASHBOARD PANEL -->
+        <section class="panel active" id="dashboard">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Quick Snapshot</div>
+                <div class="card-subtitle">Your current status in college.</div>
+              </div>
+              <span class="badge-soft">Live Preview</span>
+            </div>
+
+            <div class="grid-3">
+              <div class="stat-card">
+                <div class="stat-label">Overall Attendance</div>
+                <div class="stat-value" id="overallAttendance">86%</div>
+                <div class="stat-extra">Minimum required: 75%</div>
+                <div class="chip">Safe ✅</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Fees Status</div>
+                <div class="stat-value" id="feesStatus">₹ 15,000 / 40,000</div>
+                <div class="stat-extra">Next due: 15 Jan 2026</div>
+                <div class="chip bad">Due ⚠</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Last Exam Result</div>
+                <div class="stat-value">PASS</div>
+                <div class="stat-extra">CGPA: 8.2</div>
+                <div class="chip">Good 📈</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:10px;">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Today’s Classes</div>
+                <div class="card-subtitle">Your timetable for today.</div>
+              </div>
+              <span class="pill-small">Auto from ERP (future)</span>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Subject</th>
+                  <th>Faculty</th>
+                  <th>Room</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>9:00 – 10:00</td>
+                  <td>Data Structures</td>
+                  <td>Mr. Sharma</td>
+                  <td>C-204</td>
+                  <td>Lecture</td>
+                </tr>
+                <tr>
+                  <td>10:00 – 11:00</td>
+                  <td>DBMS</td>
+                  <td>Ms. Kaur</td>
+                  <td>Lab-3</td>
+                  <td>Lab</td>
+                </tr>
+                <tr>
+                  <td>12:00 – 1:00</td>
+                  <td>Maths-III</td>
+                  <td>Dr. Verma</td>
+                  <td>B-105</td>
+                  <td>Lecture</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- FEES PANEL -->
+        <section class="panel" id="fees">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Fees & Payment</div>
+                <div class="card-subtitle">Pay your semester fees securely.</div>
+              </div>
+              <span class="tag">Payment demo only</span>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="field">
+                <label>Student Name</label>
+                <input type="text" id="feesName" value="Harpreet Singh">
+              </div>
+              <div class="field">
+                <label>Roll Number</label>
+                <input type="text" id="feesRoll" value="CSE-23-045">
+              </div>
+              <div class="field">
+                <label>Course</label>
+                <select id="feesCourse">
+                  <option>B.Tech CSE</option>
+                  <option>BCA</option>
+                  <option>BBA</option>
+                  <option>MCA</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Semester</label>
+                <select id="feesSem">
+                  <option>Sem I</option>
+                  <option>Sem II</option>
+                  <option selected>Sem III</option>
+                  <option>Sem IV</option>
+                  <option>Sem V</option>
+                  <option>Sem VI</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Fees Amount (₹)</label>
+                <input type="number" id="feesAmount" value="25000">
+                <div class="muted-help">
+                  Actual amount normally comes from database.
+                </div>
+              </div>
+              <div class="field">
+                <label>Payment Mode</label>
+                <select id="feesMode">
+                  <option>UPI</option>
+                  <option>Net Banking</option>
+                  <option>Credit Card</option>
+                  <option>Debit Card</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Remarks (optional)</label>
+              <textarea id="feesRemarks" placeholder="Example: Paying 1st installment only."></textarea>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-ghost" type="button" id="feesResetBtn">Clear</button>
+              <button class="btn btn-primary" type="button" id="feesPayBtn">
+                💳 Pay Now
+              </button>
+            </div>
+
+            <div class="muted-help" id="feesMsg" style="margin-top:8px;"></div>
+          </div>
+        </section>
+
+        <!-- ATTENDANCE PANEL -->
+        <section class="panel" id="attendance">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Attendance Summary</div>
+                <div class="card-subtitle">
+                  Subject-wise attendance for current semester.
+                </div>
+              </div>
+              <span class="tag">Auto-sync from college ERP (future)</span>
+            </div>
+
+            <table id="attendanceTable">
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Present</th>
+                  <th>Total</th>
+                  <th>%</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Filled by JS below -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- RESULTS PANEL -->
+        <section class="panel" id="results">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Exam Results</div>
+                <div class="card-subtitle">
+                  Check your pass / fail status subject-wise.
+                </div>
+              </div>
+              <span class="tag">Internal + External</span>
+            </div>
+
+            <div class="form-grid-2" style="margin-bottom: 10px;">
+              <div class="field">
+                <label>Exam Type</label>
+                <select id="examType">
+                  <option>Mid Term</option>
+                  <option selected>End Term</option>
+                  <option>Reappear</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Semester</label>
+                <select id="resultSem">
+                  <option>Sem I</option>
+                  <option>Sem II</option>
+                  <option selected>Sem III</option>
+                  <option>Sem IV</option>
+                </select>
+              </div>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Subject</th>
+                  <th>Max</th>
+                  <th>Marks</th>
+                  <th>Grade</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="resultsBody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- PROFILE PANEL -->
+        <section class="panel" id="profile">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Profile & ERP Details</div>
+                <div class="card-subtitle">Update your personal details for college ERP.</div>
+              </div>
+              <span class="tag">Editable by student</span>
+            </div>
+
+            <div class="profile-layout">
+              <!-- Avatar & quick info -->
+              <div class="avatar-wrap">
+                <div class="avatar-big" id="profileAvatar">
+                  <span id="profileAvatarInitials">HS</span>
+                  <img id="profileAvatarImg" alt="Profile" style="display:none;">
+                </div>
+                <div class="avatar-name" id="profileNameDisplay">Harpreet Singh</div>
+                <div class="avatar-meta">Roll: CSE-23-045 · B.Tech CSE</div>
+
+                <label class="link-btn" for="avatarInput">
+                  Change profile picture
+                </label>
+                <input type="file" id="avatarInput" class="file-input" accept="image/*">
+
+                <div class="muted-help">
+                  Only stored locally in this demo.<br>
+                  In real ERP, upload to server & update DB.
+                </div>
+              </div>
+
+              <!-- Editable form -->
+              <div>
+                <div class="form-grid-2">
+                  <div class="field">
+                    <label>Full Name</label>
+                    <input type="text" id="profileName" value="Harpreet Singh">
+                  </div>
+                  <div class="field">
+                    <label>Mobile Number</label>
+                    <input type="tel" id="profileMobile" value="+91-98765-43210">
+                  </div>
+                  <div class="field">
+                    <label>Parent Mobile</label>
+                    <input type="tel" id="profileParentMobile" value="+91-98765-00000">
+                  </div>
+                  <div class="field">
+                    <label>ERP Email</label>
+                    <input type="email" id="profileEmail" value="harpreet.singh@college.edu">
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label>Address</label>
+                  <textarea id="profileAddress">SAS Nagar, Mohali, Punjab, India</textarea>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="field">
+                    <label>Guardian Name</label>
+                    <input type="text" id="profileGuardian" value="Mr. Singh">
+                  </div>
+                  <div class="field">
+                    <label>Emergency Contact</label>
+                    <input type="tel" id="profileEmergency" value="+91-99999-99999">
+                  </div>
+                </div>
+
+                <div class="btn-row">
+                  <button class="btn btn-ghost" type="button" id="profileReset">Reset</button>
+                  <button class="btn btn-primary" type="button" id="profileSave">
+                    💾 Save to ERP (demo)
+                  </button>
+                </div>
+
+                <div class="muted-help" id="profileMsg" style="margin-top:8px;"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SUPPORT PANEL -->
+        <section class="panel" id="support">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Support & Helpdesk</div>
+                <div class="card-subtitle">Raise a ticket for any issue.</div>
+              </div>
+              <span class="tag">Students Helpdesk</span>
+            </div>
+
+            <div class="field">
+              <label>Issue Type</label>
+              <select id="supportType">
+                <option>Fees related</option>
+                <option>Attendance correction</option>
+                <option>Result / Marks issue</option>
+                <option>Profile / ERP issue</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Subject</label>
+              <input type="text" id="supportSubject" placeholder="Example: Wrong attendance marked in DBMS">
+            </div>
+
+            <div class="field">
+              <label>Describe your issue</label>
+              <textarea id="supportDesc" placeholder="Explain the problem in detail..."></textarea>
+            </div>
+
+            <div class="btn-row">
+              <button class="btn btn-primary" type="button" id="supportSubmit">
+                📩 Submit Ticket
+              </button>
+            </div>
+
+            <div class="muted-help" id="supportMsg" style="margin-top:8px;"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT: side column (notices etc.) -->
+      <div class="side-column">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Notices & Announcements</div>
+              <div class="card-subtitle">Latest updates from college.</div>
+            </div>
+            <span class="pill-small">Auto from admin panel (future)</span>
+          </div>
+
+          <div class="notice-item">
+            <div class="notice-title">Mid Term Exam Schedule Released</div>
+            <div class="notice-meta">View timetable in Downloads section.</div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-title">Fees Last Date Extended</div>
+            <div class="notice-meta">New last date: 20 Jan 2026 · Late fine after that.</div>
+          </div>
+          <div class="notice-item">
+            <div class="notice-title">ERP Maintenance</div>
+            <div class="notice-meta">Portal may be slow 12am–2am tonight.</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Downloads</div>
+              <div class="card-subtitle">Syllabus, exam schedule, forms etc.</div>
+            </div>
+            <span class="tag">Static links (demo)</span>
+          </div>
+
+          <div class="downloads-list">
+            <a href="#">
+              <div>Exam Schedule – Sem III</div>
+              <span>PDF · 280 KB</span>
+            </a>
+            <a href="#">
+              <div>Academic Calendar 2025–26</div>
+              <span>PDF · 520 KB</span>
+            </a>
+            <a href="#">
+              <div>Hostel Rules & Regulations</div>
+              <span>PDF · 190 KB</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Quick Support</div>
+              <div class="card-subtitle">Contact ERP / admin office.</div>
+            </div>
+          </div>
+
+          <div class="support-text">
+            <strong>ERP Email:</strong> erp.support@college.edu<br>
+            <strong>Fees Helpdesk:</strong> +91-98765-11111<br>
+            <strong>Timing:</strong> 9:30 AM – 4:30 PM
+          </div>
+          <div class="support-text">
+            For urgent issues (attendance, wrong marks), raise ticket from “Support” tab.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  // ---------- NAVIGATION ----------
+  const navLinks = document.querySelectorAll('.nav-link');
+  const panels = document.querySelectorAll('.panel');
+  const pageTitle = document.getElementById('pageTitle');
+  const pageSubtitle = document.getElementById('pageSubtitle');
+
+  const subtitlesMap = {
+    dashboard: 'Overview of your fees, attendance, results and profile.',
+    fees: 'Pay your semester fees securely.',
+    attendance: 'Subject-wise attendance for current semester.',
+    results: 'Check your pass / fail status subject-wise.',
+    profile: 'Update your personal details for college ERP.',
+    support: 'Raise a ticket for any issue.'
+  };
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = link.getAttribute('data-target');
+
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+
+      panels.forEach(p => {
+        p.classList.toggle('active', p.id === target);
+      });
+
+      const text = link.innerText.trim();
+      pageTitle.textContent = text;
+      pageSubtitle.textContent = subtitlesMap[target] || '';
+    });
+  });
+
+  // ---------- ATTENDANCE DUMMY DATA ----------
+  const attendanceData = [
+    { subject: 'Data Structures', present: 40, total: 46 },
+    { subject: 'DBMS',           present: 38, total: 45 },
+    { subject: 'Maths-III',      present: 35, total: 44 },
+    { subject: 'Computer Networks', present: 32, total: 42 },
+    { subject: 'Environment',    present: 25, total: 30 }
+  ];
+
+  const attendanceTableBody = document.querySelector('#attendanceTable tbody');
+
+  function renderAttendance() {
+    attendanceTableBody.innerHTML = '';
+    attendanceData.forEach(row => {
+      const percent = row.total === 0 ? 0 : Math.round((row.present / row.total) * 100);
+      const tr = document.createElement('tr');
+
+      const statusText = percent >= 75 ? 'Safe' : (percent >= 60 ? 'Warning' : 'Short');
+      const statusClass = percent >= 75 ? 'status-pass'
+                        : percent >= 60 ? 'status-pending'
+                        : 'status-fail';
+
+      tr.innerHTML = `
+        <td>${row.subject}</td>
+        <td>${row.present}</td>
+        <td>${row.total}</td>
+        <td>
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <span>${percent}%</span>
+            <div class="progress-wrap">
+              <div class="progress-bar ${percent < 75 ? 'low' : ''}" style="width:${percent}%"></div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <span class="status-pill ${statusClass}">
+            ${statusText}
+          </span>
+        </td>
+      `;
+      attendanceTableBody.appendChild(tr);
+    });
+
+    // overall attendance
+    const totalPresent = attendanceData.reduce((s, r) => s + r.present, 0);
+    const totalTotal = attendanceData.reduce((s, r) => s + r.total, 0);
+    const overall = totalTotal === 0 ? 0 : Math.round((totalPresent / totalTotal) * 100);
+    const overallAttendanceEl = document.getElementById('overallAttendance');
+    if (overallAttendanceEl) overallAttendanceEl.textContent = overall + '%';
+  }
+
+  renderAttendance();
+
+  // ---------- RESULTS DUMMY DATA ----------
+  const resultsData = [
+    { subject: 'Data Structures', max: 100, marks: 82, grade: 'A' },
+    { subject: 'DBMS',           max: 100, marks: 77, grade: 'B+' },
+    { subject: 'Maths-III',      max: 100, marks: 68, grade: 'B' },
+    { subject: 'Computer Networks', max: 100, marks: 49, grade: 'F' },
+    { subject: 'Environment',    max: 50,  marks: 40, grade: 'A' }
+  ];
+
+  const resultsBody = document.getElementById('resultsBody');
+
+  function renderResults() {
+    resultsBody.innerHTML = '';
+    resultsData.forEach(row => {
+      const passMark = Math.round(row.max * 0.4); // 40% passing criteria demo
+      const status = row.marks >= passMark ? 'Pass' : 'Fail';
+      const statusClass = row.marks >= passMark ? 'status-pass' : 'status-fail';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.subject}</td>
+        <td>${row.max}</td>
+        <td>${row.marks}</td>
+        <td>${row.grade}</td>
+        <td>
+          <span class="status-pill ${statusClass}">
+            ${status}
+          </span>
+        </td>
+      `;
+      resultsBody.appendChild(tr);
+    });
+  }
+
+  renderResults();
+
+  // ---------- FEES FORM (DEMO HANDLING) ----------
+  const feesPayBtn = document.getElementById('feesPayBtn');
+  const feesResetBtn = document.getElementById('feesResetBtn');
+  const feesMsg = document.getElementById('feesMsg');
+
+  feesPayBtn.addEventListener('click', () => {
+    const name = document.getElementById('feesName').value.trim();
+    const roll = document.getElementById('feesRoll').value.trim();
+    const amount = document.getElementById('feesAmount').value.trim();
+
+    if (!name || !roll || !amount) {
+      feesMsg.style.color = '#fecaca';
+      feesMsg.textContent = 'Please fill all mandatory fields (Name, Roll, Amount).';
+      return;
+    }
+
+    feesMsg.style.color = '#bbf7d0';
+    feesMsg.textContent = `Demo only: ₹${amount} payment request prepared for ${name} (${roll}). Integrate real payment gateway here.`;
+  });
+
+  feesResetBtn.addEventListener('click', () => {
+    document.getElementById('feesAmount').value = '';
+    document.getElementById('feesRemarks').value = '';
+    feesMsg.textContent = '';
+  });
+
+  // ---------- PROFILE HANDLING ----------
+  const profileName = document.getElementById('profileName');
+  const profileNameDisplay = document.getElementById('profileNameDisplay');
+  const miniName = document.getElementById('miniName');
+  const miniAvatar = document.getElementById('miniAvatar');
+  const profileAvatar = document.getElementById('profileAvatar');
+  const profileAvatarImg = document.getElementById('profileAvatarImg');
+  const profileAvatarInitials = document.getElementById('profileAvatarInitials');
+  const avatarInput = document.getElementById('avatarInput');
+  const profileMsg = document.getElementById('profileMsg');
+  const profileReset = document.getElementById('profileReset');
+  const profileSave = document.getElementById('profileSave');
+
+  function updateInitials(name) {
+    const parts = name.trim().split(' ').filter(Boolean);
+    const initials = parts.slice(0,2).map(p => p[0].toUpperCase()).join('');
+    profileAvatarInitials.textContent = initials || 'U';
+    miniAvatar.textContent = initials[0] || 'U';
+  }
+
+  profileName.addEventListener('input', () => {
+    const val = profileName.value || 'Student';
+    profileNameDisplay.textContent = val;
+    miniName.textContent = val;
+    updateInitials(val);
+  });
+
+  avatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      profileAvatarImg.src = ev.target.result;
+      profileAvatarImg.style.display = 'block';
+      profileAvatarInitials.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  profileSave.addEventListener('click', () => {
+    profileMsg.style.color = '#bbf7d0';
+    profileMsg.textContent = 'Demo only: details updated locally. In real ERP, send this data to backend API & update database.';
+  });
+
+  profileReset.addEventListener('click', () => {
+    profileName.value = 'Harpreet Singh';
+    document.getElementById('profileMobile').value = '+91-98765-43210';
+    document.getElementById('profileParentMobile').value = '+91-98765-00000';
+    document.getElementById('profileEmail').value = 'harpreet.singh@college.edu';
+    document.getElementById('profileAddress').value = 'SAS Nagar, Mohali, Punjab, India';
+    document.getElementById('profileGuardian').value = 'Mr. Singh';
+    document.getElementById('profileEmergency').value = '+91-99999-99999';
+
+    profileAvatarImg.style.display = 'none';
+    profileAvatarInitials.style.display = 'block';
+    profileNameDisplay.textContent = 'Harpreet Singh';
+    miniName.textContent = 'Harpreet Singh';
+    updateInitials('Harpreet Singh');
+    profileMsg.textContent = '';
+  });
+
+  // initial initials
+  updateInitials(profileName.value || 'Harpreet Singh');
+
+  // ---------- SUPPORT FORM (DEMO) ----------
+  const supportSubmit = document.getElementById('supportSubmit');
+  const supportMsg = document.getElementById('supportMsg');
+
+  supportSubmit.addEventListener('click', () => {
+    const type = document.getElementById('supportType').value;
+    const subject = document.getElementById('supportSubject').value.trim();
+    const desc = document.getElementById('supportDesc').value.trim();
+
+    if (!subject || !desc) {
+      supportMsg.style.color = '#fecaca';
+      supportMsg.textContent = 'Please fill both subject and description.';
+      return;
+    }
+
+    supportMsg.style.color = '#bbf7d0';
+    supportMsg.textContent = `Demo only: support ticket created for "${type}". In real system, this will generate ticket ID + email to admin.`;
+  });
+</script>
+
+</body>
+</html>
